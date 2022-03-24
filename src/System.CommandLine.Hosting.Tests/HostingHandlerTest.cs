@@ -122,14 +122,12 @@ namespace System.CommandLine.Hosting.Tests
             cmd.AddCommand(new MyCommand());
             cmd.AddCommand(new MyOtherCommand());
             var parser = new CommandLineBuilder(cmd)
-                         .UseHost((builder) => {
-                             builder.ConfigureServices(services =>
-                             {
-                                 services.AddTransient(x => service);
-                             })
-                                    .UseCommandHandler<MyCommand, MyCommand.MyDerivedHandler>()
-                                    .UseCommandHandler<MyOtherCommand, MyOtherCommand.MyDerivedHandler>();
-                         })
+                         .UseHost((builder) =>
+                                  {
+                                      builder.ConfigureServices(services => { services.AddTransient(x => service); })
+                                             .UseCommandHandler<MyCommand, MyCommand.MyDerivedHandler>()
+                                             .UseCommandHandler<MyOtherCommand, MyOtherCommand.MyDerivedHandler>();
+                                  })
                          .Build();
 
             await parser.InvokeAsync(new string[] { "mycommand", "--int-option", "54" });

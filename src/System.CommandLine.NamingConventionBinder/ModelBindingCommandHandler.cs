@@ -23,7 +23,7 @@ public class ModelBindingCommandHandler : ICommandHandler
     private readonly IMethodDescriptor _methodDescriptor;
     private Dictionary<IValueDescriptor, IValueSource> _invokeArgumentBindingSources { get; } =
         new();
-    
+
     internal ModelBindingCommandHandler(
         MethodInfo handlerMethodInfo,
         IMethodDescriptor methodDescriptor,

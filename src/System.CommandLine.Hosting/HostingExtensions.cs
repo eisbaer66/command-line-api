@@ -109,9 +109,9 @@ namespace System.CommandLine.Hosting
             {
                 invocation.BindingContext.AddService(handlerType, c => c.GetService<IHost>().Services.GetService(handlerType));
                 builder.ConfigureServices(services =>
-                                          {
-                                              services.AddTransient(handlerType);
-                                          });
+                {
+                    services.AddTransient(handlerType);
+                });
 
                 command.Handler = CommandHandler.Create(handlerType.GetMethod(nameof(ICommandHandler.InvokeAsync)), handlerType);
             }
