@@ -24,6 +24,15 @@ public static class CommandHandler
     /// Creates a command handler based on a <see cref="MethodInfo"/>.
     /// </summary>
     /// <param name="method">The method to be called when the command handler is invoked.</param>
+    /// <param name="commandHandler">The concrete type of the command handler.</param>
+    /// <returns>An instance of <see cref="ICommandHandler"/>.</returns>
+    public static ICommandHandler Create(MethodInfo method, Type commandHandler) =>
+        HandlerDescriptor.FromMethodInfo(method, commandHandler).GetCommandHandler();
+
+    /// <summary>
+    /// Creates a command handler based on a <see cref="MethodInfo"/>.
+    /// </summary>
+    /// <param name="method">The method to be called when the command handler is invoked.</param>
     /// <param name="target">A target instance to be used if the specified method is an instance method. This can be null if the method is static.</param>
     /// <returns>An instance of <see cref="ICommandHandler"/>.</returns>
     public static ICommandHandler Create(MethodInfo method, object? target = null) =>

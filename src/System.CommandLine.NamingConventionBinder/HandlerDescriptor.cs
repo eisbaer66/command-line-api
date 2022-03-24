@@ -35,6 +35,15 @@ public abstract class HandlerDescriptor : IMethodDescriptor
     /// Creates a descriptor based on the specified method.
     /// </summary>
     /// <param name="methodInfo">The method for which to create a handler descriptor.</param>
+    /// <param name="commandHandler">The concrete type of the command handler.</param>
+    /// <returns>A handler descriptor for the method and instance.</returns>
+    public static HandlerDescriptor FromMethodInfo(MethodInfo methodInfo, Type commandHandler) =>
+        new MethodInfoHandlerDescriptor(methodInfo, commandHandler);
+
+    /// <summary>
+    /// Creates a descriptor based on the specified method.
+    /// </summary>
+    /// <param name="methodInfo">The method for which to create a handler descriptor.</param>
     /// <param name="target">An instance for the descriptor to target. In the case of <see langword="static"/> methods, <see langword="null"/> should be passed.</param>
     /// <returns>A handler descriptor for the method and instance.</returns>
     public static HandlerDescriptor FromMethodInfo(MethodInfo methodInfo, object? target = null) =>

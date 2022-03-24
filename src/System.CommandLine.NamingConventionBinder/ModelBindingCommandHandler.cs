@@ -19,10 +19,11 @@ public class ModelBindingCommandHandler : ICommandHandler
     private readonly object? _invocationTarget;
     private readonly ModelBinder? _invocationTargetBinder;
     private readonly MethodInfo? _handlerMethodInfo;
+    private readonly Type? _commandHandler;
     private readonly IMethodDescriptor _methodDescriptor;
     private Dictionary<IValueDescriptor, IValueSource> _invokeArgumentBindingSources { get; } =
         new();
-
+    
     internal ModelBindingCommandHandler(
         MethodInfo handlerMethodInfo,
         IMethodDescriptor methodDescriptor,
@@ -38,9 +39,16 @@ public class ModelBindingCommandHandler : ICommandHandler
 
     internal ModelBindingCommandHandler(
         MethodInfo handlerMethodInfo,
+        Type? commandHandler,
         IMethodDescriptor methodDescriptor)
-        : this(handlerMethodInfo, methodDescriptor, null)
-    { }
+    {
+        _handlerMethodInfo = handlerMethodInfo ?? throw new ArgumentNullException(nameof(handlerMethodInfo));
+        _commandHandler    = commandHandler;
+        _invocationTargetBinder = _handlerMethodInfo.IsStatic
+                                      ? null
+                                      : new ModelBinder(_handlerMethodInfo.ReflectedType);
+        _methodDescriptor = methodDescriptor ?? throw new ArgumentNullException(nameof(methodDescriptor));
+    }
 
     internal ModelBindingCommandHandler(
         Delegate handlerDelegate,
@@ -73,7 +81,7 @@ public class ModelBindingCommandHandler : ICommandHandler
         if (_handlerDelegate is null)
         {
             var invocationTarget = _invocationTarget ?? 
-                                   bindingContext.GetService(_handlerMethodInfo!.DeclaringType);
+                                   bindingContext.GetService(_commandHandler ?? _handlerMethodInfo!.DeclaringType);
             if(invocationTarget is { })
             {
                 _invocationTargetBinder?.UpdateInstance(invocationTarget, bindingContext);
